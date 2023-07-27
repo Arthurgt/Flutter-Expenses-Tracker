@@ -6,3 +6,4 @@ CMake* linguist-detectable=false
 *.h linguist-detectable=false
 *.c linguist-detectable=false
 *.html linguist-detectable=false
+*.swift linguist-detectable=false
