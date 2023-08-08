@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_expense_tracker/models/category.dart';
+import '../models/expense.dart';
 
 class NewExpense extends StatefulWidget {
-  const NewExpense({super.key});
+  const NewExpense({super.key, required this.addExpense});
+
+  final void Function(Expense expense) addExpense;
 
   @override
   State<NewExpense> createState() {
@@ -50,6 +53,14 @@ class _NewExpenseState extends State<NewExpense> {
       );
       return;
     }
+
+    widget.addExpense(Expense(
+      amount: double.tryParse(_amountController.text)!,
+      category: _selectedCategory,
+      date: _selectedDate!,
+      title: _titleController.text,
+    ));
+    Navigator.pop(context);
   }
 
   bool _isDataValid() {
