@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_expense_tracker/models/category.dart';
 
 class NewExpense extends StatefulWidget {
   const NewExpense({super.key});
@@ -15,6 +16,7 @@ class _NewExpenseState extends State<NewExpense> {
   final _amountController = TextEditingController();
   final formatter = DateFormat.yMd();
   DateTime? _selectedDate;
+  Category _selectedCategory = Category.leisure;
 
   void _presentDatePicker() async {
     final now = DateTime.now();
@@ -27,6 +29,14 @@ class _NewExpenseState extends State<NewExpense> {
     setState(() {
       _selectedDate = pickedDate;
     });
+  }
+
+  void _submtExpenseData() {
+    final enteredAmount = double.tryParse(_amountController.text);
+    final amountIsInvalid = enteredAmount == null || enteredAmount <= 0;
+    if (_titleController.text.trim().isEmpty) {
+      //show error message
+    }
   }
 
   @override
@@ -81,20 +91,39 @@ class _NewExpenseState extends State<NewExpense> {
               ),
             ],
           ),
+          SizedBox(height: 16),
           Row(
             children: [
+              DropdownButton(
+                value: _selectedCategory,
+                items: Category.values
+                    .map(
+                      (category) => DropdownMenuItem(
+                        value: category,
+                        child: Text(
+                          category.name.toUpperCase(),
+                        ),
+                      ),
+                    )
+                    .toList(),
+                onChanged: (value) {
+                  if (value == null) {
+                    return;
+                  }
+                  setState(() {
+                    _selectedCategory = value;
+                  });
+                },
+              ),
+              const Spacer(),
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
                 child: const Text('Cancel'),
               ),
-              Spacer(),
               ElevatedButton(
-                onPressed: () {
-                  print(_titleController.text);
-                  print(_amountController.text);
-                },
+                onPressed: _submtExpenseData,
                 child: const Text('Save Expense'),
               )
             ],
